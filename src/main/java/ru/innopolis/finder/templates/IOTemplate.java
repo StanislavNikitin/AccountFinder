@@ -1,4 +1,4 @@
-package ru.finder.templates;
+package ru.innopolis.finder.templates;
 
 /**
  * Created by Leha on 16-Jul-16.
