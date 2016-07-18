@@ -4,14 +4,21 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Templates</web-resource-name>
+            <url-pattern>/templates/*</url-pattern>
+        </web-resource-collection>
+    </security-constraint>
+
+
     <servlet>
         <servlet-name>MainServlet</servlet-name>
-        <servlet-class>ru.innopolis.finder.servlets.MainPageServlet</servlet-class>
+        <servlet-class>ru.finder.servlets.MainPageServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
         <!-- MainPageServlet NAME -->
         <url-pattern>/</url-pattern>
     </servlet-mapping>
-
 </web-app>

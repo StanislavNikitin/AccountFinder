@@ -1,0 +1,13 @@
+.header h1{
+    color: deepskyblue;
+    font-size: 25px;
+    text-align: center;
+    margin-top: 16px;
+}
+
+.header  hr {
+    border: none;
+    background-color: deepskyblue;
+    color: deepskyblue; /* Цвет линии для IE6-7 */
+    height: 1px;
+}
