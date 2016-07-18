@@ -44,8 +44,16 @@ public class MainPageServlet extends HttpServlet {
             boolean allContained = false; //email and login exist in request params
             if (incomingParams.containsKey(IOTemplate.InputField.LOGIN) && incomingParams.containsKey(IOTemplate.InputField.MAIL)){
                 allContained = true;
-                //process it!
-                //validation -> sending to GH manager -> ...
+                /*
+                try {
+                    IOManager ioManager = new IOManager();
+                    result = ioManager.process(userName, email);
+                } catch (NotValidMainException e){
+
+                }
+                if (result != null){
+                    //result exists
+                }*/
             }
 
 
