@@ -1,5 +1,6 @@
 package ru.innopolis.finder.io;
 
+import ru.innopolis.finder.manager.DataController;
 import ru.innopolis.finder.service.Profile;
 
 import java.util.List;
