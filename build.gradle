@@ -3,6 +3,7 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'war'
+apply plugin: 'jetty'
 
 repositories {
     mavenCentral()
@@ -14,5 +15,5 @@ dependencies {
     compile group: 'log4j', name: 'log4j', version: '1.2.15', ext: 'jar'
     compile group: 'javax', name: 'javaee-api', version: '7.0'
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.4'
-    compile group: 'org.kohsuke', name: 'github-api', version: '1.76'
+    compile group: 'org.kohsuke', name: 'github-api', version: '1.66'
 }

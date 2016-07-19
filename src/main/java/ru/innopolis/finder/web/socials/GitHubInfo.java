@@ -23,18 +23,7 @@ public class GitHubInfo {
     private GHUser user;
     private GitHub gitHub;
 
-    /**
-     *
-     * @param userEmail email in the correct form
-     * @param userLogin user login on GH
-     * @throws IOException if can't find user on GH (connection trouble of user doesn't exists)
-     */
-    public GitHubInfo(String userLogin, String userEmail) throws IOException {
-
-        if (!setUser(userLogin, userEmail)){
-            throw new IOException("User with login " + userLogin + " and email " + userEmail + " can't be founded on GH");
-        }
-
+    public GitHubInfo(){
     }
 
     private String getUserData(UserData dataType){
