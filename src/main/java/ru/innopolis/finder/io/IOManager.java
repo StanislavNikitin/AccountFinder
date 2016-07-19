@@ -21,7 +21,7 @@ public class IOManager {
         return true;
     }
 
-    public Profile[] processData(String email, String login){
+    public Profile[] processData(String email, String login) throws NotValidInputDataException{
         Profile[] profilesList = null;
         if(!login.isEmpty() && !email.isEmpty()){
             //validate email

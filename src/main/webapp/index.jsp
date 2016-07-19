@@ -52,10 +52,17 @@
 
     </div>
 </div>
+<div id="resultPanel" class="panel panel-info">
+    <div class="panel-body">
+    </div>
+</div>
 
 <!--script src="main.js"></script-->
 <script type="application/javascript" >
     console.log("Page is loaded");
+    var $resPanel = $('#resultPanel');
+
+    $resPanel.hide();
 
     $('#submitButton').on('click', function () {
         var $inputs = $('#toFIndForm :input');
@@ -64,14 +71,29 @@
         console.log(values);
 
         $.ajax({
-            url: "/Finder",
+            url: "Finder",
             data: values,
             success: function(data, status){
-                console.log("success");
-                // show accounts info
+                console.log(data);
+                if(data && data.data.length > 0){
+                    drawResults(data.data);
+                    $resPanel.show();
+                }
+                else{
+                    $resPanel.hide();
+                }
             },
             dataType: "json"
         });
+
+        function drawResults(data) {
+            $panel = $("#resultPanel > div.panel-body");
+            $panel.empty();
+            data.forEach(function(item){
+                $panel.append('<div class="account-info"><p>' +item.name+' '+item.surname+' '+item.link+ '</p></div>')
+            })
+        }
+
     })
 
 </script>

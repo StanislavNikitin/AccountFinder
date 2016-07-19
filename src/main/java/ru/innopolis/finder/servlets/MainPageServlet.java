@@ -6,9 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,25 +45,36 @@ public class MainPageServlet extends HttpServlet {
 
             }
 
-            if(incomingParams.containsKey(IOTemplate.InputField.ACTION)){
+            if (incomingParams.containsKey(IOTemplate.InputField.ACTION)) {
                 if (incomingParams.get(IOTemplate.InputField.ACTION).equals("find")) {
                     String login = incomingParams.get(IOTemplate.InputField.LOGIN);
                     String email = incomingParams.get(IOTemplate.InputField.MAIL);
-                    List<Profile> result;
+                    Profile[] result = null;
                     try {
                         IOManager ioManager = new IOManager();
                         result = ioManager.processData(login, email);
-                    }
-                    /*catch (NotValidInputDataException e) {
-                    }*/
-                    finally {
+                    } catch (NotValidInputDataException e) {
+                    } finally {
 
                     }
-                    for (int index=0; index < result.size(); index++){
-                        //make json from Person's array here
+                    String jsonString = "{\"success\":\"true\", \"data\":[";
+                    if (result != null) {
+                        for (int index = 0; index < result.length; index++) {
+                            //make json from Person's array here
+                            Profile p = result[index];
+                            jsonString += "{ \"name\":\"" + p.getName().toString() + "\", \"surname\":\"" + p.getSurname().toString() + "\", \"link\":\"" + p.getLink().toString() + "\"},";
+                        }
+                        if(jsonString.length() > 0){ // remove last ',' here
+                            jsonString = jsonString.substring(0, jsonString.length()-1);
+                        }
                     }
-
+                    jsonString += "] }";
+                    response.getWriter().write(jsonString);
                 }
+            }
+            else {
+                //default to main page
+                request.getRequestDispatcher("index.jsp").forward(request, response);
             }
 
             //if there were login and email
@@ -85,7 +94,7 @@ public class MainPageServlet extends HttpServlet {
             }
 
 
-            if (allContained) { //email and login exist in request params
+            /*if (allContained) { //email and login exist in request params
 
                 request.setAttribute("isShowingResult", "true");
                 request.setAttribute("login", incomingParams.get(IOTemplate.InputField.LOGIN));
@@ -98,12 +107,10 @@ public class MainPageServlet extends HttpServlet {
                 }
                 session.setAttribute("isShowingResult", "true");
                 session.setAttribute("login", incomingParams.get(IOTemplate.InputField.LOGIN));
-                session.setAttribute("email", incomingParams.get(IOTemplate.InputField.MAIL));*/
+                session.setAttribute("email", incomingParams.get(IOTemplate.InputField.MAIL));
 
-            }
+            }*/
 
-            //redirecting to main page
-            request.getRequestDispatcher("index.jsp").forward(request, response);
 
         } else if (request.getMethod().equalsIgnoreCase("post")){ //in case of POST request
 
