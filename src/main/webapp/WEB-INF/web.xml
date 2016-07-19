@@ -14,7 +14,7 @@
 
     <servlet>
         <servlet-name>MainServlet</servlet-name>
-        <servlet-class>ru.finder.servlets.MainPageServlet</servlet-class>
+        <servlet-class>ru.innopolis.finder.servlets.MainPageServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>

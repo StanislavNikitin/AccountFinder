@@ -6,9 +6,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import ru.innopolis.finder.io.IOManager;
+import ru.innopolis.finder.io.NotValidInputDataException;
+import ru.innopolis.finder.service.Profile;
 import ru.innopolis.finder.templates.IOTemplate;
 
 /**
@@ -40,9 +47,30 @@ public class MainPageServlet extends HttpServlet {
 
             }
 
+            if(incomingParams.containsKey(IOTemplate.InputField.ACTION)){
+                if (incomingParams.get(IOTemplate.InputField.ACTION).equals("find")) {
+                    String login = incomingParams.get(IOTemplate.InputField.LOGIN);
+                    String email = incomingParams.get(IOTemplate.InputField.MAIL);
+                    List<Profile> result;
+                    try {
+                        IOManager ioManager = new IOManager();
+                        result = ioManager.processData(login, email);
+                    }
+                    /*catch (NotValidInputDataException e) {
+                    }*/
+                    finally {
+
+                    }
+                    for (int index=0; index < result.size(); index++){
+                        //make json from Person's array here
+                    }
+
+                }
+            }
+
             //if there were login and email
             boolean allContained = false; //email and login exist in request params
-            if (incomingParams.containsKey(IOTemplate.InputField.LOGIN) && incomingParams.containsKey(IOTemplate.InputField.MAIL)){
+            if (incomingParams.containsKey(IOTemplate.InputField.LOGIN) && incomingParams.containsKey(IOTemplate.InputField.MAIL) && incomingParams.containsKey(IOTemplate.InputField.ACTION)){
                 allContained = true;
                 /*
                 try {
@@ -68,7 +96,6 @@ public class MainPageServlet extends HttpServlet {
                 if (session == null) { //create a new session
                     session = request.getSession(false);
                 }
-
                 session.setAttribute("isShowingResult", "true");
                 session.setAttribute("login", incomingParams.get(IOTemplate.InputField.LOGIN));
                 session.setAttribute("email", incomingParams.get(IOTemplate.InputField.MAIL));*/
