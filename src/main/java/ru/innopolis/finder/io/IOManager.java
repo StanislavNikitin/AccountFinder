@@ -3,6 +3,7 @@ package ru.innopolis.finder.io;
 import ru.innopolis.finder.manager.DataController;
 import ru.innopolis.finder.service.Profile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,11 +21,15 @@ public class IOManager {
         return true;
     }
 
-    public List<Profile> inputData(String email, String login){
+    public Profile[] processData(String email, String login) throws NotValidInputDataException{
+        Profile[] profilesList = null;
+        if(!login.isEmpty() && !email.isEmpty()){
+            //validate email
+            DataController dc = new DataController();
+            profilesList = dc.process(login, email);
+        }
 
-
-
-        return null;
+        return profilesList;
     }
 
 }

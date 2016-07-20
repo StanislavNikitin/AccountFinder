@@ -6,9 +6,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import ru.innopolis.finder.io.IOManager;
+import ru.innopolis.finder.io.NotValidInputDataException;
+import ru.innopolis.finder.service.Profile;
 import ru.innopolis.finder.templates.IOTemplate;
 
 /**
@@ -40,9 +45,41 @@ public class MainPageServlet extends HttpServlet {
 
             }
 
+            if (incomingParams.containsKey(IOTemplate.InputField.ACTION)) {
+                if (incomingParams.get(IOTemplate.InputField.ACTION).equals("find")) {
+                    String login = incomingParams.get(IOTemplate.InputField.LOGIN);
+                    String email = incomingParams.get(IOTemplate.InputField.MAIL);
+                    Profile[] result = null;
+                    try {
+                        IOManager ioManager = new IOManager();
+                        result = ioManager.processData(login, email);
+                    } catch (NotValidInputDataException e) {
+                    } finally {
+
+                    }
+                    String jsonString = "{\"success\":\"true\", \"data\":[";
+                    if (result != null) {
+                        for (int index = 0; index < result.length; index++) {
+                            //make json from Person's array here
+                            Profile p = result[index];
+                            jsonString += "{ \"name\":\"" + p.getName().toString() + "\", \"surname\":\"" + p.getSurname().toString() + "\", \"link\":\"" + p.getLink().toString() + "\"},";
+                        }
+                        if(jsonString.length() > 0){ // remove last ',' here
+                            jsonString = jsonString.substring(0, jsonString.length()-1);
+                        }
+                    }
+                    jsonString += "] }";
+                    response.getWriter().write(jsonString);
+                }
+            }
+            else {
+                //default to main page
+                request.getRequestDispatcher("index.jsp").forward(request, response);
+            }
+
             //if there were login and email
             boolean allContained = false; //email and login exist in request params
-            if (incomingParams.containsKey(IOTemplate.InputField.LOGIN) && incomingParams.containsKey(IOTemplate.InputField.MAIL)){
+            if (incomingParams.containsKey(IOTemplate.InputField.LOGIN) && incomingParams.containsKey(IOTemplate.InputField.MAIL) && incomingParams.containsKey(IOTemplate.InputField.ACTION)){
                 allContained = true;
                 /*
                 try {
@@ -57,7 +94,7 @@ public class MainPageServlet extends HttpServlet {
             }
 
 
-            if (allContained) { //email and login exist in request params
+            /*if (allContained) { //email and login exist in request params
 
                 request.setAttribute("isShowingResult", "true");
                 request.setAttribute("login", incomingParams.get(IOTemplate.InputField.LOGIN));
@@ -68,15 +105,12 @@ public class MainPageServlet extends HttpServlet {
                 if (session == null) { //create a new session
                     session = request.getSession(false);
                 }
-
                 session.setAttribute("isShowingResult", "true");
                 session.setAttribute("login", incomingParams.get(IOTemplate.InputField.LOGIN));
-                session.setAttribute("email", incomingParams.get(IOTemplate.InputField.MAIL));*/
+                session.setAttribute("email", incomingParams.get(IOTemplate.InputField.MAIL));
 
-            }
+            }*/
 
-            //redirecting to main page
-            request.getRequestDispatcher("index.jsp").forward(request, response);
 
         } else if (request.getMethod().equalsIgnoreCase("post")){ //in case of POST request
 

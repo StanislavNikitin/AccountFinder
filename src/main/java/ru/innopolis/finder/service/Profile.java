@@ -6,25 +6,45 @@ package ru.innopolis.finder.service;
 public class Profile {
 
     private String name;
-    private String surname;
+    private String cover;
     private String link;
 
-    public Profile(String name, String surname, String link) {
+    public Profile(String name, String cover, String link) {
+        this.setName(name);
+        this.setCover(cover);
+        this.setLink(link);
+    }
 
-        this.name = name;
-        this.surname = surname;
-        this.link = link;
+    public Profile(){
+        this.setCover("");
+        this.setName("");
+        this.setLink("");
     }
 
     public String getLink() {
         return link;
     }
 
-    public String getSurname() {
-        return surname;
+    public String getCover() {
+        return cover;
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        if (name != null)
+            this.name = name;
+    }
+
+    public void setCover(String cover) {
+        if (cover != null)
+            this.cover = cover;
+    }
+
+    public void setLink(String link) {
+        if (link != null)
+            this.link = link;
     }
 }
