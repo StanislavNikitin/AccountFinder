@@ -13,12 +13,14 @@ public class DataController {
         if (!gi.setUser(nickname, email)) {
             return null;
         }
+
         String location = gi.getUserLocation();
         String userName = gi.getUserName();
 
         if (userName == null) {
             return null;
         }
+
 
         FBInfo fi = new FBInfo(fbToken);
         return fi.getUsers(userName, location).toArray(new Profile[0]);
