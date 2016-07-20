@@ -6,6 +6,9 @@ apply plugin: 'war'
 
 repositories {
     mavenCentral()
+    jenkins {
+        url "http://repo.mycompany.com/repo"
+    }
 }
 
 dependencies {
@@ -14,5 +17,8 @@ dependencies {
     compile group: 'log4j', name: 'log4j', version: '1.2.15', ext: 'jar'
     compile group: 'javax', name: 'javaee-api', version: '7.0'
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.4'
+    compile group: 'com.restfb', name: 'restfb', version: '1.26.0'
     compile group: 'org.kohsuke', name: 'github-api', version: '1.76'
+    compile files('lib/github-api-1.76.jar')
+    //compile group: 'org.kohsuke', name: 'github-api', version: '1.76'
 }

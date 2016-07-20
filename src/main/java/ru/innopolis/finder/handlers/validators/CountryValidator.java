@@ -38,11 +38,11 @@ public class CountryValidator {
         }
     }
 
-    CountryValidator (){
+    public CountryValidator (){
         initCountryList();
     }
 
-    public String [] Validate (String line) throws Exception{
+    public String [] validate (String line) throws Exception{
         for (Country country : Countries){
             if (line.equals(country.getCode()) ||
                     line.equals(country.getName()) ||
