@@ -13,14 +13,15 @@ public class DataController {
         if (!gi.setUser(nickname, email)) {
             return null;
         }
+
         String location = gi.getUserLocation();
         String userName = gi.getUserName();
 
         if (userName == null) {
             return null;
         }
-
-        FBInfo fi = new FBInfo("EAACEdEose0cBAM6UNnmCXxZBX7ipGy3R06AEUiAbWk2ltOdAkaRQZCrluGmTS7cl2cLXUFa2EOT3ZCx7xfogHDA7LRa4oZCpMZC7tWHxsY2lj1V298GdlPFcKzlcFC7X8ukcFMQsaeWG9GePQxkhldW6qqAu6YKx87PdpbosZCmQZDZD");
+        
+        FBInfo fi = new FBInfo("EAACEdEose0cBAEMjXFDBYvSh9ZCXMTHlDel2WdflVTbal1NBGOFNdIHECx17Iibv7eG35cSZCEyZB3caT5ZCb7gwYhn1StIbnP28IZBX9ZCSf1PB0h69hus5LLsaO8xGohNLc7WIl7Hw0rssUVcLduVzIOaa8QTLWc8Oepi8RKGgZDZD");
         return fi.getUsers(userName, location).toArray(new Profile[0]);
     }
 }
