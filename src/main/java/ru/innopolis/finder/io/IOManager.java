@@ -17,15 +17,9 @@ public class IOManager {
         dc = new DataController();
     }
 
-    private boolean validateData(){
-        return true;
-    }
-
     public Profile[] processData(String email, String login) throws NotValidInputDataException{
         Profile[] profilesList = null;
         if(!login.isEmpty() && !email.isEmpty()){
-            //validate email
-            DataController dc = new DataController();
             try {
                 profilesList = dc.process(login, email);
             } catch (Exception e) {

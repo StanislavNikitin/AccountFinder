@@ -1,14 +1,12 @@
 package ru.innopolis.finder.web.socials;
 
-import ru.innopolis.finder.web.httpclient.HttpBrowser;
-import ru.innopolis.finder.web.httpclient.HttpResponse;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-
-import java.io.IOException;
+import ru.innopolis.finder.web.httpclient.HttpBrowser;
+import ru.innopolis.finder.web.httpclient.HttpResponse;
 
 /**
  * Created by Leha on 19-Jul-16.
@@ -35,13 +33,7 @@ public class GitHubInfo {
 
 
     public GitHubInfo(){
-        browser = new HttpBrowser(null, false);
-        jsonContent = null;
-        response = null;
-        jsonParser = new JSONParser();
-
-        login = null;
-        email = null;
+        this(null, null);
     }
 
     public GitHubInfo(String login, String email){

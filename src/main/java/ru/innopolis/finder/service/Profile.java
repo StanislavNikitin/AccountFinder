@@ -8,9 +8,9 @@ import org.json.simple.JSONObject;
  */
 public class Profile implements JSONAware{
 
-    private String name;
-    private String cover;
-    private String link;
+    private String name = "";
+    private String cover = "";
+    private String link = "";
 
     public Profile(String name, String cover, String link) {
         this.setName(name);
@@ -18,10 +18,8 @@ public class Profile implements JSONAware{
         this.setLink(link);
     }
 
-    public Profile(){
-        this.setCover("");
-        this.setName("");
-        this.setLink("");
+    public Profile() {
+        this("", "", "");
     }
 
     public String getLink() {
