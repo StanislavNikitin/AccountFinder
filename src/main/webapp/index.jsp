@@ -89,8 +89,9 @@
         function drawResults(data) {
             $panel = $("#resultPanel > div.panel-body");
             $panel.empty();
+            console.log(data);
             data.forEach(function(item){
-                $panel.append('<div class="account-info"><p>' +item.name+' '+item.surname+' '+item.link+ '</p></div>')
+                $panel.append('<div class="account-info"><p>' +item.name+' '+item.link+ '</p></div>')
             })
         }
 

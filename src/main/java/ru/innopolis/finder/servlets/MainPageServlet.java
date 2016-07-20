@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import ru.innopolis.finder.io.IOManager;
 import ru.innopolis.finder.io.NotValidInputDataException;
 import ru.innopolis.finder.service.Profile;
@@ -46,71 +48,46 @@ public class MainPageServlet extends HttpServlet {
             }
 
             if (incomingParams.containsKey(IOTemplate.InputField.ACTION)) {
-                if (incomingParams.get(IOTemplate.InputField.ACTION).equals("find")) {
+
+                if (incomingParams.get(IOTemplate.InputField.ACTION).equalsIgnoreCase("find")) {
+
+                    JSONObject jsonResult = new JSONObject();
+                    JSONArray resultArray = new JSONArray();
+
+                    boolean isSuccess = false;
+
                     String login = incomingParams.get(IOTemplate.InputField.LOGIN);
                     String email = incomingParams.get(IOTemplate.InputField.MAIL);
-                    Profile[] result = null;
-                    try {
-                        IOManager ioManager = new IOManager();
-                        result = ioManager.processData(login, email);
-                    } catch (NotValidInputDataException e) {
-                    } finally {
 
-                    }
-                    String jsonString = "{\"success\":\"true\", \"data\":[";
-                    if (result != null) {
-                        for (int index = 0; index < result.length; index++) {
-                            //make json from Person's array here
-                            Profile p = result[index];
-                            jsonString += "{ \"name\":\"" + p.getName().toString() + "\", \"surname\":\"" + "\", \"link\":\"" + p.getLink().toString() + "\"},";
+                    if (login != null && email != null) { //if both fields exists in the request
+
+                        Profile[] result = null;
+                        try {
+                            IOManager ioManager = new IOManager();
+                            result = ioManager.processData(login, email);
+                        } catch (NotValidInputDataException e) {
+
                         }
-                        if(jsonString.length() > 0){ // remove last ',' here
-                            jsonString = jsonString.substring(0, jsonString.length()-1);
+
+                        if (result != null) {
+                            for (int index = 0; index < result.length; index++) {
+                                Profile p = result[index];
+                                resultArray.add(p);
+                            }
                         }
+
+                        isSuccess = true;
                     }
-                    jsonString += "] }";
-                    response.getWriter().write(jsonString);
+
+                    jsonResult.put("success", isSuccess);
+                    jsonResult.put("data", resultArray);
+                    response.getWriter().write(jsonResult.toJSONString());
                 }
             }
             else {
                 //default to main page
                 request.getRequestDispatcher("index.jsp").forward(request, response);
             }
-
-            //if there were login and email
-            boolean allContained = false; //email and login exist in request params
-            if (incomingParams.containsKey(IOTemplate.InputField.LOGIN) && incomingParams.containsKey(IOTemplate.InputField.MAIL) && incomingParams.containsKey(IOTemplate.InputField.ACTION)){
-                allContained = true;
-                /*
-                try {
-                    IOManager ioManager = new IOManager();
-                    result = ioManager.process(userName, email);
-                } catch (NotValidMainException e){
-
-                }
-                if (result != null){
-                    //result exists
-                }*/
-            }
-
-
-            /*if (allContained) { //email and login exist in request params
-
-                request.setAttribute("isShowingResult", "true");
-                request.setAttribute("login", incomingParams.get(IOTemplate.InputField.LOGIN));
-                request.setAttribute("email", incomingParams.get(IOTemplate.InputField.MAIL));
-
-                //Demonstration of how to set session variables
-                /*HttpSession session = request.getSession(true);
-                if (session == null) { //create a new session
-                    session = request.getSession(false);
-                }
-                session.setAttribute("isShowingResult", "true");
-                session.setAttribute("login", incomingParams.get(IOTemplate.InputField.LOGIN));
-                session.setAttribute("email", incomingParams.get(IOTemplate.InputField.MAIL));
-
-            }*/
-
 
         } else if (request.getMethod().equalsIgnoreCase("post")){ //in case of POST request
 

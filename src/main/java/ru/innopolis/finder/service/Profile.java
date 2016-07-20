@@ -1,9 +1,12 @@
 package ru.innopolis.finder.service;
 
+import org.json.simple.JSONAware;
+import org.json.simple.JSONObject;
+
 /**
  * Created by Leha on 18-Jul-16.
  */
-public class Profile {
+public class Profile implements JSONAware{
 
     private String name;
     private String cover;
@@ -46,5 +49,35 @@ public class Profile {
     public void setLink(String link) {
         if (link != null)
             this.link = link;
+    }
+
+    /**
+     * @return JSON text
+     */
+    @Override
+    public String toJSONString() {
+        StringBuffer sb = new StringBuffer();
+
+        sb.append("{");
+
+        sb.append("\"" + JSONObject.escape("name") + "\"");
+        sb.append(":");
+        sb.append("\"" + JSONObject.escape(name) + "\"");
+
+        sb.append(",");
+
+        sb.append("\"" + JSONObject.escape("link") + "\"");
+        sb.append(":");
+        sb.append("\"" + JSONObject.escape(link) + "\"");
+
+        sb.append(",");
+
+        sb.append("\"" + JSONObject.escape("cover") + "\"");
+        sb.append(":");
+        sb.append("\"" + JSONObject.escape(cover) + "\"");
+
+        sb.append("}");
+
+        return sb.toString();
     }
 }
