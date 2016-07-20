@@ -16,4 +16,5 @@ dependencies {
     compile group: 'javax', name: 'javaee-api', version: '7.0'
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.4'
     compile group: 'org.kohsuke', name: 'github-api', version: '1.66'
+    compile group: 'com.restfb', name: 'restfb', version: '1.26.0'
 }
