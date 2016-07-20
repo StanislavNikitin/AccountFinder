@@ -1,8 +1,12 @@
 package ru.innopolis.finder.web.socials;
 
-import org.kohsuke.github.GHUser;
-import org.kohsuke.github.GitHub;
-
+import ru.innopolis.finder.web.httpclient.HttpBrowser;
+import ru.innopolis.finder.web.httpclient.HttpResponse;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 
@@ -20,42 +24,56 @@ public class GitHubInfo {
         LOCATION, NAME;
     }
 
+    private static final String USERS_URI = "https://api.github.com/users/";
     private String login, email;
-    private GHUser user;
-    private GitHub gitHub;
+
+    private HttpBrowser browser;
+    private HttpResponse response;
+
+    private String jsonContent;
+    private JSONParser jsonParser;
 
 
-    /**
-     *
-     * @param userEmail email in the correct form
-     * @param userLogin user login on GH
-     * @throws IOException if can't find user on GH (connection trouble of user doesn't exists)
-     */
-    public GitHubInfo(String userLogin, String userEmail) throws IOException {
+    public GitHubInfo(){
+        browser = new HttpBrowser(null, false);
+        jsonContent = null;
+        response = null;
+        jsonParser = new JSONParser();
 
-        if (!setUser(userLogin, userEmail)){
-            throw new IOException("User with login " + userLogin + " and email " + userEmail + " can't be founded on GH");
-        }
-
-
+        login = null;
+        email = null;
     }
 
+    public GitHubInfo(String login, String email){
+        browser = new HttpBrowser(null, false);
+        jsonContent = null;
+        response = null;
+        jsonParser = new JSONParser();
+
+        this.login = login;
+        this.email = email;
+    }
+
+    /** @return field dataType about user from GH or null, if user error happens
+     */
     private String getUserData(UserData dataType){
 
-        if (user == null){
-            return null;
+        if (jsonContent == null){
+            if (!userExists()) return null;
         }
 
         String userData = null;
         try {
 
+            JSONObject json = (JSONObject)jsonParser.parse(jsonContent);
             if (dataType == UserData.LOCATION){
-                userData = user.getLocation();
+                userData = (String)json.get("location");
             } else if (dataType == UserData.NAME){
-                userData = user.getName();
+                userData = (String)json.get("name");
             }
 
-        } catch (IOException e){
+        } catch (ParseException e){
+            e.printStackTrace();
             userData = null;
         }
         return userData;
@@ -74,16 +92,30 @@ public class GitHubInfo {
         return getUserData(UserData.NAME);
     }
 
+    /** @return true if user info from GH exists, false otherwise
+     *  store user info in jsonContent, or set jsonContent to null if info doesn't exists
+     */
     private boolean userExists() {
 
-        try {
-            gitHub = GitHub.connect();
-            user = gitHub.getUser(login);
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+        if (this.login == null) return false;
+
+        browser.setCurrentURI(USERS_URI + login); //set URI for request
+        response = browser.sendGetRequest();
+
+        if (null != response && response.getResponseCode() == 200){ //request success
+            if (response.hasContent()){ //response not empty
+                Document htmlContent = Jsoup.parse(response.getResponseContet());
+                jsonContent = String.valueOf(htmlContent.select("body").text());
+                if (jsonContent != null){ //user exists
+                    return true;
+                } else {
+                    jsonContent = null;
+                }
+            }
         }
+
+        jsonContent = null;
+        return false;
 
     }
 
