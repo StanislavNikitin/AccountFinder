@@ -23,6 +23,7 @@ public class GitHubInfo {
     private GHUser user;
     private GitHub gitHub;
 
+
     /**
      *
      * @param userEmail email in the correct form
@@ -34,6 +35,7 @@ public class GitHubInfo {
         if (!setUser(userLogin, userEmail)){
             throw new IOException("User with login " + userLogin + " and email " + userEmail + " can't be founded on GH");
         }
+
 
     }
 
