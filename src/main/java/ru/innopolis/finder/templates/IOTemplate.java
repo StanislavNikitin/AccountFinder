@@ -6,20 +6,21 @@ package ru.innopolis.finder.templates;
 public class IOTemplate {
 
     //Fields count in InputField and fieldsNames must be same!
-    private static final int FIELDS_COUNT = 3;
+    private static final int FIELDS_COUNT = 4;
 
     public enum InputField {
-        MAIL, LOGIN, ACTION;
+        MAIL, LOGIN, ACTION, FACEBOOK_TOKEN;
         public static InputField[] getInputFields(){
-            InputField[] values = new InputField[3];
+            InputField[] values = new InputField[FIELDS_COUNT];
             values[0] = MAIL;
             values[1] = LOGIN;
             values[2] = ACTION;
+            values[3] = FACEBOOK_TOKEN;
             return values;
         }
     }
 
-    private static String[] fieldsNames = {"email", "login", "action"};
+    private static String[] fieldsNames = {"email", "login", "action", "facebook_token"};
 
     public static String[] getFieldsNames(){
         return fieldsNames;

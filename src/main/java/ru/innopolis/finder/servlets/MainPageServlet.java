@@ -58,13 +58,14 @@ public class MainPageServlet extends HttpServlet {
 
                     String login = incomingParams.get(IOTemplate.InputField.LOGIN);
                     String email = incomingParams.get(IOTemplate.InputField.MAIL);
+                    String fbToken = incomingParams.get(IOTemplate.InputField.FACEBOOK_TOKEN);
 
-                    if (login != null && email != null) { //if both fields exists in the request
+                    if (login != null && email != null && fbToken != null) { //if both fields exists in the request
 
                         Profile[] result = null;
                         try {
                             IOManager ioManager = new IOManager();
-                            result = ioManager.processData(login, email);
+                            result = ioManager.processData(login, email, fbToken);
                         } catch (NotValidInputDataException e) {
 
                         }

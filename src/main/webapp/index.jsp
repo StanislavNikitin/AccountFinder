@@ -19,6 +19,18 @@
             color: deepskyblue; /* Цвет линии для IE6-7 */
             height: 1px;
         }
+        .result_text {
+            font-size: 12px;
+        }
+        .result_text #success_text {
+            color: limegreen;
+        }
+        .result_text #fail_text {
+            color: red;
+        }
+        .invisible {
+            display: none;
+        }
     </style>
     <!--link rel="stylesheet" type="text/css" href="main.css"-->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -45,24 +57,30 @@
                        aria-describedby="basic-addon2">
                 <input name="email" type="text" class="form-control" placeholder="E-mail"
                        aria-describedby="basic-addon2">
-                <input id="submitButton" class="btn btn-default" value="Submit"><!-- type="submit"-->
+                <input id="submitButton" class="btn btn-default" value="Send"><!-- type="submit"-->
+                <input value="EAACEdEose0cBAEM9UTwrmvl6ImV8bvDNh3VgvW8dW4bTYzWW3mep6nacKFSJv59tjENxoEbMxqgJ4dGS0pnjiCNRWQgODqeVlhxRuMpjFZAT66Pqh0fJQXup5mliPHrtM2uPU68K5UfzC8h87PneSmW8sfJdtk9REGSejGwZDZD" name="facebook_token" class="form-control" placeholder="Access token" aria-describedly="basic-addon2">
+                <div id="result-status">
+                    <img id="process" src="img/progress.gif">
+                    <p class="result_text" id="success_text"></p>
+                </div>
             </div>
         </form>
-
 
     </div>
 </div>
 <div id="resultPanel" class="panel panel-info">
-    <div class="panel-body">
-    </div>
+        <img src="img/facebook.jpg" width="32" height="32"/>
+        <div class="panel-body">
+        </div>
 </div>
 
 <!--script src="main.js"></script-->
 <script type="application/javascript" >
     console.log("Page is loaded");
     var $resPanel = $('#resultPanel');
-
     $resPanel.hide();
+
+    $('#result-status').hide()
 
     $('#submitButton').on('click', function () {
         var $inputs = $('#toFIndForm :input');
@@ -70,16 +88,34 @@
         values += "&action=find";
         console.log(values);
 
+        $('#result-status').show()
+        $('#process').show()
+
         $.ajax({
-            url: "Finder",
+            url: "",
             data: values,
             success: function(data, status){
                 console.log(data);
+
+                $('#process').hide()
+
                 if(data && data.data.length > 0){
+
                     drawResults(data.data);
+
+                    $('p.result-text').each(function (index) {
+                        $(this).attr('id', 'success_text')
+                        $(this).text("Success!")
+                    })
+
                     $resPanel.show();
                 }
                 else{
+                    $('p.result-text').each(function (index) {
+                        $(this).attr('id', 'fail_text')
+                        $(this).text("fail")
+                    })
+
                     $resPanel.hide();
                 }
             },
@@ -87,11 +123,15 @@
         });
 
         function drawResults(data) {
+
             $panel = $("#resultPanel > div.panel-body");
             $panel.empty();
             console.log(data);
             data.forEach(function(item){
-                $panel.append('<div class="account-info"><p>' +item.name+' '+item.link+ '</p></div>')
+                $panel.append('<div class="account-info">')
+                $panel.append('<img src="' + ((item.cover == "") ? 'img/unknow.gif': item.cover) + '" width=64 height=64>')
+                $panel.append('<a target="_blank" href="' + item.link + '">'+item.name+'</a></div>')
+                $panel.append('</div>')
             })
         }
 

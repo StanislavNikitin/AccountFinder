@@ -17,11 +17,11 @@ public class IOManager {
         dc = new DataController();
     }
 
-    public Profile[] processData(String email, String login) throws NotValidInputDataException{
+    public Profile[] processData(String email, String login, String fbToken) throws NotValidInputDataException{
         Profile[] profilesList = null;
-        if(!login.isEmpty() && !email.isEmpty()){
+        if(!login.isEmpty() && !email.isEmpty() && !fbToken.isEmpty()){
             try {
-                profilesList = dc.process(login, email);
+                profilesList = dc.process(login, email, fbToken);
             } catch (Exception e) {
                 e.printStackTrace();
             }
