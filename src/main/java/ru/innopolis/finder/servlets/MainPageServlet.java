@@ -62,7 +62,7 @@ public class MainPageServlet extends HttpServlet {
                         for (int index = 0; index < result.length; index++) {
                             //make json from Person's array here
                             Profile p = result[index];
-                            jsonString += "{ \"name\":\"" + p.getName().toString() + "\", \"surname\":\"" + p.getSurname().toString() + "\", \"link\":\"" + p.getLink().toString() + "\"},";
+                            jsonString += "{ \"name\":\"" + p.getName().toString() + "\", \"surname\":\"" + "\", \"link\":\"" + p.getLink().toString() + "\"},";
                         }
                         if(jsonString.length() > 0){ // remove last ',' here
                             jsonString = jsonString.substring(0, jsonString.length()-1);

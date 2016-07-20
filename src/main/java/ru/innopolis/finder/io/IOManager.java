@@ -26,7 +26,11 @@ public class IOManager {
         if(!login.isEmpty() && !email.isEmpty()){
             //validate email
             DataController dc = new DataController();
-            profilesList = dc.process(login, email);
+            try {
+                profilesList = dc.process(login, email);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return profilesList;

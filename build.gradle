@@ -7,9 +7,6 @@ apply plugin: 'jetty'
 
 repositories {
     mavenCentral()
-    jenkins {
-        url "http://repo.mycompany.com/repo"
-    }
 }
 
 dependencies {
@@ -20,4 +17,7 @@ dependencies {
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.4'
     compile group: 'com.restfb', name: 'restfb', version: '1.26.0'
     compile files('lib/github-api-1.76.jar')
+    compile files('lib/jackson-databind-2.2.3.jar')
+    compile files('lib/jackson-core-2.2.3.jar')
+    compile files('lib/jackson-annotations-2.2.3.jar')
 }
