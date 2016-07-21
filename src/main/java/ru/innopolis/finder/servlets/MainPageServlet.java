@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.json.simple.JSONObject;
 import ru.innopolis.finder.data.IOManager;
 import ru.innopolis.finder.service.Profile;
 import ru.innopolis.finder.templates.IOTemplate;
+import ru.innopolis.finder.web.socials.FBInfo;
 
 /**
  * Created by Leha on 16-Jul-16.
@@ -24,97 +26,111 @@ public class MainPageServlet extends HttpServlet {
     //Here request is processing, and after it's execution response will be returned
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-    if (request.getMethod().equalsIgnoreCase("get")){//in case of GET request
 
-        response.setContentType("text/html;charset=UTF-8");
+        HttpSession session = request.getSession(true);
+        if (session == null) session = request.getSession(false);
 
-        //Checking for parameters located in class IOTemplate in parameters list that were coming from user with HTTP request
-        Map<IOTemplate.InputField, String> incomingParams = new HashMap<>();
-        String[] fieldsNames = IOTemplate.getFieldsNames();
-        int i = 0;
-        String currParameter;
+        if (request.getMethod().equalsIgnoreCase("get")){//in case of GET request
 
-        //Finding in request for parameters, defined in IOTemplate
-        for (IOTemplate.InputField field : IOTemplate.InputField.getInputFields()){
+            response.setContentType("text/html;charset=UTF-8");
 
-            currParameter = request.getParameter(fieldsNames[i]);
-            if (currParameter != null) {
-                incomingParams.put(field, currParameter);
+            //Checking for parameters located in class IOTemplate in parameters list that were coming from user with HTTP request
+            Map<IOTemplate.InputField, String> incomingParams = new HashMap<>();
+            String[] fieldsNames = IOTemplate.getFieldsNames();
+            int i = 0;
+            String currParameter;
+
+            //Finding in request for parameters, defined in IOTemplate
+            for (IOTemplate.InputField field : IOTemplate.InputField.getInputFields()){
+
+                currParameter = request.getParameter(fieldsNames[i]);
+                if (currParameter != null) {
+                    incomingParams.put(field, currParameter);
+                }
+                i++;
+
             }
-            i++;
 
-        }
+            if (incomingParams.containsKey(IOTemplate.InputField.FACEBOOK_TOKEN)){
+                String token = incomingParams.get(IOTemplate.InputField.FACEBOOK_TOKEN);
+                session.setAttribute("facebook_token", token);
+                session.setAttribute("valid_token", String.valueOf(FBInfo.checkToken(token)));
 
-        if (incomingParams.containsKey(IOTemplate.InputField.ACTION)) {
+                response.sendRedirect(request.getContextPath() + "/index");
+                return;
+            }
 
-            if (incomingParams.get(IOTemplate.InputField.ACTION).equalsIgnoreCase("find")) {
+            session.setAttribute("valid_token", String.valueOf(FBInfo.checkToken((String) session.getAttribute("facebook_token"))));
+            if (incomingParams.containsKey(IOTemplate.InputField.ACTION)) {
 
-                JSONObject jsonResult = new JSONObject(),
-                           jsonSN = new JSONObject();
-                JSONArray profilesArray = new JSONArray();
-                String processingException = null;
-                boolean isSuccess = false;
-                int profilesCount = 0;
+                if (incomingParams.get(IOTemplate.InputField.ACTION).equalsIgnoreCase("find")) {
 
-                String login = incomingParams.get(IOTemplate.InputField.LOGIN);
-                String email = incomingParams.get(IOTemplate.InputField.MAIL);
-                String fbToken = incomingParams.get(IOTemplate.InputField.FACEBOOK_TOKEN);
+                    JSONObject jsonResult = new JSONObject(),
+                               jsonSN = new JSONObject();
+                    JSONArray profilesArray = new JSONArray();
+                    String processingException = null;
+                    boolean isSuccess = false;
+                    int profilesCount = 0;
 
-                if (login != null && email != null) {//if both fields exists in the request
+                    String login = incomingParams.get(IOTemplate.InputField.LOGIN);
+                    String email = incomingParams.get(IOTemplate.InputField.MAIL);
+                    String fbToken = (String)request.getSession(true).getAttribute("facebook_token");
 
-                    IOManager ioManager = new IOManager();
-                    Profile[] profiles = null;
-                    if (ioManager.checkData(login, email)) { //correct input data
+                    if (login != null && email != null) {//if both fields exists in the request
 
-                        //Process FB
-                        if (fbToken != null) {
-                            try {
-                                profiles = ioManager.getFromFB(fbToken);
-                                isSuccess = true;
-                            } catch (Exception e) {
-                                processingException = e.getMessage();
-                                e.printStackTrace();
+                        IOManager ioManager = new IOManager();
+                        Profile[] profiles = null;
+                        if (ioManager.checkData(login, email)) { //correct input data
+
+                            //Process FB
+                            if (fbToken != null) {
+                                try {
+                                    profiles = ioManager.getFromFB(fbToken);
+                                    isSuccess = true;
+                                } catch (Exception e) {
+                                    processingException = e.getMessage();
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                processingException = "Please, enter facebook token";
                             }
+                            if (profiles != null) {
+                                for (int index = 0; index < profiles.length; index++) {
+                                    Profile p = profiles[index];
+                                    profilesCount++;
+                                    profilesArray.add(p);
+                                }
+                                jsonSN.put("facebook", profilesArray);
+                            }
+
                         } else {
-                            processingException = "Please, enter facebook token";
+                            processingException = "Incorrect input data";
                         }
-                        if (profiles != null) {
-                            for (int index = 0; index < profiles.length; index++) {
-                                Profile p = profiles[index];
-                                profilesCount++;
-                                profilesArray.add(p);
-                            }
-                            jsonSN.put("facebook", profilesArray);
-                        }
-
-                    } else {
-                        processingException = "Incorrect input data";
+                    }  else {//end of valid input data condition
+                        processingException = "Please, enter login and email";
                     }
-                }  else {//end of valid input data condition
-                    processingException = "Please, enter login and email";
-                }
 
-                if (processingException != null){
-                    jsonResult.put("error", processingException);
-                } else {
-                    jsonResult.put("error", "");
-                }
-                jsonResult.put("count", new Integer(profilesCount));
-                jsonResult.put("success", isSuccess);
-                jsonResult.put("data", jsonSN);
-                response.getWriter().write(jsonResult.toJSONString());
+                    if (processingException != null){
+                        jsonResult.put("error", processingException);
+                    } else {
+                        jsonResult.put("error", "");
+                    }
+                    jsonResult.put("count", new Integer(profilesCount));
+                    jsonResult.put("success", isSuccess);
+                    jsonResult.put("data", jsonSN);
+                    response.getWriter().write(jsonResult.toJSONString());
 
-            } //end of "parameter 'action' equals 'find'"
+                } //end of "parameter 'action' equals 'find'"
 
+            }
+            else { //without action - forward to main page
+                request.getRequestDispatcher("index.jsp").forward(request, response);
+            }
+
+        } else if (request.getMethod().equalsIgnoreCase("post")){ //in case of POST request
         }
-        else { //without action - forward to main page
-            request.getRequestDispatcher("index.jsp").forward(request, response);
-        }
 
-    } else if (request.getMethod().equalsIgnoreCase("post")){ //in case of POST request
     }
-
-}
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet override methods. Click on the + sign on the left to edit the code.">
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

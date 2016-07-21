@@ -31,7 +31,6 @@ public class GitHubInfo {
     private String jsonContent;
     private JSONParser jsonParser;
 
-
     public GitHubInfo(){
         this(null, null);
     }

@@ -16,6 +16,19 @@ public class FBInfo {
     private static final String searchFields = "link,location,cover,name,id,hometown";
     private FacebookClient fbClient;
 
+
+    public static boolean checkToken(String accessToken){
+        try {
+            FacebookClient fbClient = new DefaultFacebookClient(accesToken, Version.VERSION_2_6);
+            fbClient.fetchConnection("search", User.class,
+                    Parameter.with("q", "Alexey"), Parameter.with("type", "user"),
+                    Parameter.with("fields", searchFields));
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+    }
+
     public FBInfo(String accesToken) {
         if (accesToken != null)
             this.accesToken = accesToken;

@@ -57,7 +57,14 @@
         <h3 class="panel-title">Enter github.com account's info</h3>
     </div>
     <div class="panel-body">
-
+        <p>
+            <% Object isValid = request.getSession().getAttribute("valid_token");
+                if (isValid != null && isValid.equals("true")){ %>
+                You authorized in Facebook
+            <% } else {%>
+                Please, authorize in Facebook!
+            <% } %>
+        </p>
         <form id ="toFIndForm" role="form" class="form-inline">
             <div class="form-group">
                 <input name="login" type="text" class="form-control" placeholder="Username" value="paulmillr"
@@ -65,7 +72,6 @@
                 <input name="email" type="text" class="form-control" placeholder="E-mail" value="paulmillr"
                        aria-describedby="basic-addon2">
                 <input id="submitButton" class="btn btn-default" value="Send"><!-- type="submit"-->
-                <input value="EAACEdEose0cBAL9qNKDlmBEAy4h0a1x6S3OKiexxmsBLBHOaykFxKwnBgN9vaQFcMNqFTt1acjEGgBUNombp0pZAjiKOZAqcdCigXfkR5IaOmjZASHZAcZA4wd5nqKjiCdSroaraLmxcfO847gKFQ2PJZCInwB4ZBLuVc2KGMvGewZDZD" name="facebook_token" class="form-control" placeholder="Access token" aria-describedly="basic-addon2">
                 <div id="result-status">
                     <img id="process" src="img/progress.gif">
                     <p id="result_text"></p>

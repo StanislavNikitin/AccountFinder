@@ -20,7 +20,7 @@ public class IOTemplate {
         }
     }
 
-    private static String[] fieldsNames = {"email", "login", "action", "facebook_token"};
+    private static String[] fieldsNames = {"email", "login", "action", "code"};
 
     public static String[] getFieldsNames(){
         return fieldsNames;
