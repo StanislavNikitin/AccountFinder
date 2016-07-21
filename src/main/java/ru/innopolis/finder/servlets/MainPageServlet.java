@@ -84,6 +84,9 @@ public class MainPageServlet extends HttpServlet {
                     jsonResult.put("data", resultArray);
                     response.getWriter().write(jsonResult.toJSONString());
                 }
+                else {
+                    response.getWriter().write("\"success\": \"false\"");
+                }
             }
             else {
                 //default to main page
@@ -91,7 +94,6 @@ public class MainPageServlet extends HttpServlet {
             }
 
         } else if (request.getMethod().equalsIgnoreCase("post")){ //in case of POST request
-
         }
 
     }

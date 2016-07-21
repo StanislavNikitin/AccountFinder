@@ -31,6 +31,12 @@
         .invisible {
             display: none;
         }
+        div .account-info{
+            margin-left: 10px;
+        }
+        .account-info a{
+            margin-left: 10px;
+        }
     </style>
     <!--link rel="stylesheet" type="text/css" href="main.css"-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -68,18 +74,30 @@
 
     </div>
 </div>
+
 <div id="resultPanel" class="panel panel-info">
-        <img src="img/facebook.jpg" width="32" height="32"/>
-        <div class="panel-body">
+    <div class="panel-body">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-5">
+                    <img src="img/facebook.jpg" width="32" height="32"/>
+                    <div id="facebookresults"></div>
+                </div>
+                <div class="col-sm-5">
+                    <img src="img/twitter.jpg" width="32" height="32"/>
+                    <div id="twitterresults"></div>
+                </div>
+            </div>
         </div>
+    </div>
 </div>
 
 <!--script src="main.js"></script-->
 <script type="application/javascript" >
     console.log("Page is loaded");
     var $resPanel = $('#resultPanel');
-    $resPanel.hide();
 
+    $resPanel.hide();
     $('#result-status').hide()
 
     $('#submitButton').on('click', function () {
@@ -87,6 +105,8 @@
         var values = $inputs.serialize();
         values += "&action=find";
         console.log(values);
+        $fb = $("#facebookresults");
+        $tw = $("#twitterresults");
 
         $('#result-status').show()
         $('#process').show()
@@ -95,13 +115,13 @@
             url: "",
             data: values,
             success: function(data, status){
-                console.log(data);
 
                 $('#process').hide()
 
-                if(data && data.data.length > 0){
+                if(data && data.data && data.data.length > 0){
 
-                    drawResults(data.data);
+                    data.data.facebook && data.data.facebook.length > 0 ? drawResults(data.data.facebook, $fb) : $fb.empty();
+                    data.data.twitter && data.data.twitter.length > 0 ? drawResults(data.data.twitter, $tw) : $tw.empty();
 
                     $('p.result-text').each(function (index) {
                         $(this).attr('id', 'success_text')
@@ -122,16 +142,14 @@
             dataType: "json"
         });
 
-        function drawResults(data) {
+        function drawResults(data, container) {
+            container.empty();
 
-            $panel = $("#resultPanel > div.panel-body");
-            $panel.empty();
-            console.log(data);
             data.forEach(function(item){
-                $panel.append('<div class="account-info">')
-                $panel.append('<img src="' + ((item.cover == "") ? 'img/unknow.gif': item.cover) + '" width=64 height=64>')
-                $panel.append('<a target="_blank" href="' + item.link + '">'+item.name+'</a></div>')
-                $panel.append('</div>')
+                container.append('<div class="account-info">')
+                container.append('<img src="' + ((item.cover == "") ? 'img/unknow.gif': item.cover) + '" width=64 height=64>')
+                container.append('<a target="_blank" href="' + item.link + '">'+item.name+'</a></div>')
+                container.append('</div>')
             })
         }
 
