@@ -123,18 +123,14 @@
                     data.data.facebook && data.data.facebook.length > 0 ? drawResults(data.data.facebook, $fb) : $fb.empty();
                     data.data.twitter && data.data.twitter.length > 0 ? drawResults(data.data.twitter, $tw) : $tw.empty();
 
-                    $('p.result-text').each(function (index) {
-                        $(this).attr('id', 'success_text')
-                        $(this).text("Success!")
-                    })
+                    $('p.result-text').html("Success");
 
                     $resPanel.show();
                 }
                 else{
-                    $('p.result-text').each(function (index) {
-                        $(this).attr('id', 'fail_text')
-                        $(this).text("fail")
-                    })
+                    $('p.result-text').html("Fail")
+                       // $(this).attr('id', 'fail_text')
+                       // $(this).text("fail")
 
                     $resPanel.hide();
                 }
