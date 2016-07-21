@@ -19,22 +19,23 @@
             color: deepskyblue; /* Цвет линии для IE6-7 */
             height: 1px;
         }
-        .result_text {
+        #result_text {
             font-size: 12px;
         }
-        .result_text #success_text {
+        #result_text.success_text {
             color: limegreen;
         }
-        .result_text #fail_text {
+        #result_text.fail_text {
             color: red;
         }
         .invisible {
             display: none;
         }
-        div .account-info{
+        div.account-info{
             margin-left: 10px;
+            margin-top: 5px;
         }
-        .account-info a{
+        a.linkto{
             margin-left: 10px;
         }
     </style>
@@ -59,15 +60,15 @@
 
         <form id ="toFIndForm" role="form" class="form-inline">
             <div class="form-group">
-                <input name="login" type="text" class="form-control" placeholder="Username"
+                <input name="login" type="text" class="form-control" placeholder="Username" value="paulmillr"
                        aria-describedby="basic-addon2">
-                <input name="email" type="text" class="form-control" placeholder="E-mail"
+                <input name="email" type="text" class="form-control" placeholder="E-mail" value="paulmillr"
                        aria-describedby="basic-addon2">
                 <input id="submitButton" class="btn btn-default" value="Send"><!-- type="submit"-->
-                <input value="EAACEdEose0cBAEM9UTwrmvl6ImV8bvDNh3VgvW8dW4bTYzWW3mep6nacKFSJv59tjENxoEbMxqgJ4dGS0pnjiCNRWQgODqeVlhxRuMpjFZAT66Pqh0fJQXup5mliPHrtM2uPU68K5UfzC8h87PneSmW8sfJdtk9REGSejGwZDZD" name="facebook_token" class="form-control" placeholder="Access token" aria-describedly="basic-addon2">
+                <input value="EAACEdEose0cBAL9qNKDlmBEAy4h0a1x6S3OKiexxmsBLBHOaykFxKwnBgN9vaQFcMNqFTt1acjEGgBUNombp0pZAjiKOZAqcdCigXfkR5IaOmjZASHZAcZA4wd5nqKjiCdSroaraLmxcfO847gKFQ2PJZCInwB4ZBLuVc2KGMvGewZDZD" name="facebook_token" class="form-control" placeholder="Access token" aria-describedly="basic-addon2">
                 <div id="result-status">
                     <img id="process" src="img/progress.gif">
-                    <p class="result_text" id="success_text"></p>
+                    <p id="result_text"></p>
                 </div>
             </div>
         </form>
@@ -110,6 +111,7 @@
 
         $('#result-status').show()
         $('#process').show()
+        $('#result_text').hide()
 
         $.ajax({
             url: "",
@@ -117,24 +119,22 @@
             success: function(data, status){
 
                 $('#process').hide()
+                $('#result_text').show()
 
-                if(data && data.data && data.data.length > 0){
+                if(data && data.data && data.success == true){
 
                     data.data.facebook && data.data.facebook.length > 0 ? drawResults(data.data.facebook, $fb) : $fb.empty();
                     data.data.twitter && data.data.twitter.length > 0 ? drawResults(data.data.twitter, $tw) : $tw.empty();
 
-                    $('p.result-text').each(function (index) {
-                        $(this).attr('id', 'success_text')
-                        $(this).text("Success!")
-                    })
+                    $('#result_text').removeClass("fail_text").addClass("success_text")
+                    $('#result_text').text("Found " + data.count + " matches")
 
                     $resPanel.show();
                 }
-                else{
-                    $('p.result-text').each(function (index) {
-                        $(this).attr('id', 'fail_text')
-                        $(this).text("fail")
-                    })
+                else if (data.success == false){
+
+                    $('#result_text').removeClass("success_text").addClass("fail_text")
+                    $('#result_text').text(data.error)
 
                     $resPanel.hide();
                 }
@@ -148,7 +148,7 @@
             data.forEach(function(item){
                 container.append('<div class="account-info">')
                 container.append('<img src="' + ((item.cover == "") ? 'img/unknow.gif': item.cover) + '" width=64 height=64>')
-                container.append('<a target="_blank" href="' + item.link + '">'+item.name+'</a></div>')
+                container.append('<a class="linkto" target="_blank" href="' + item.link + '">'+item.name+'</a></div>')
                 container.append('</div>')
             })
         }

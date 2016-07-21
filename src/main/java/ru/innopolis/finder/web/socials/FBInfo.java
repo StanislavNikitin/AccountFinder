@@ -21,14 +21,20 @@ public class FBInfo {
             this.accesToken = accesToken;
     }
 
-    public List<Profile> getUsers(String userName, String userLocation) {
+    public List<Profile> getUsers(String userName, String userLocation) throws Exception {
 
-        fbClient = new DefaultFacebookClient(accesToken, Version.VERSION_2_6);
-        Connection<User> searchResults = fbClient.fetchConnection("search", User.class,
-                Parameter.with("q", userName), Parameter.with("type", "user"),
-                Parameter.with("fields", searchFields));
+        Connection<User> searchResults = null;
+        try {
+            fbClient = new DefaultFacebookClient(accesToken, Version.VERSION_2_6);
+            searchResults = fbClient.fetchConnection("search", User.class,
+                    Parameter.with("q", userName), Parameter.with("type", "user"),
+                    Parameter.with("fields", searchFields));
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new Exception("Can't recieve data from Facebook: check your access token.");
+        }
 
-        List<User> users = searchResults.getData();
+        List<User> users = (searchResults == null) ? null: searchResults.getData();
         List<Profile> persons = new ArrayList<Profile>();
         if (users == null) return persons;
 

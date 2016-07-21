@@ -1,10 +1,6 @@
-package ru.innopolis.finder.io;
+package ru.innopolis.finder.data;
 
-import ru.innopolis.finder.manager.DataController;
 import ru.innopolis.finder.service.Profile;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Leha on 18-Jul-16.
@@ -12,19 +8,33 @@ import java.util.List;
 public class IOManager {
 
     private DataController dc;
+    private String login, email;
 
     public IOManager(){
+        login = "";
+        email = "";
         dc = new DataController();
     }
 
 
-    public Profile[] processData(String login, String email, String fbToken) throws NotValidInputDataException{
+    public boolean checkData(String login, String email){
+        if(!login.isEmpty() && !email.isEmpty()){
+            this.login = login;
+            this.email = email;
+            return true;
+        }
+        return false;
+    }
+
+    public Profile[] getFromFB(String fbToken) throws Exception{
         Profile[] profilesList = null;
-        if(!login.isEmpty() && !email.isEmpty() && !fbToken.isEmpty()){
+
+        if(!fbToken.isEmpty()){
             try {
                 profilesList = dc.process(login, email, fbToken);
             } catch (Exception e) {
                 e.printStackTrace();
+                throw e;
             }
         }
 
