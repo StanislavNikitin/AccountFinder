@@ -1,4 +1,4 @@
-package ru.innopolis.finder.manager;
+package ru.innopolis.finder.data;
 
 import ru.innopolis.finder.service.Profile;
 import ru.innopolis.finder.web.socials.FBInfo;
@@ -9,16 +9,18 @@ import ru.innopolis.finder.web.socials.GitHubInfo;
  */
 public class DataController {
     public Profile[] process(String nickname, String email, String fbToken) throws Exception {
+
         GitHubInfo gi = new GitHubInfo(email, nickname);
+
         if (!gi.setUser(nickname, email)) {
-            return null;
+            throw new Exception("User doesn't exists on GitHub");
         }
 
         String location = gi.getUserLocation();
         String userName = gi.getUserName();
 
         if (userName == null) {
-            return null;
+            throw new Exception("User on GitHub doesn't have fields 'Name' and 'Surname'");
         }
 
 
