@@ -83,8 +83,7 @@
 </div>
 <script type="application/javascript">
     var link = document.createElement('a')
-    var currUrl = document.URL
-    if (currUrl.split('/')[-1] != "index") currUrl += "index"
+    var currUrl = document.URL.substring(0, document.URL.indexOf("index") + 5)
     var redirect_uri = "https://www.facebook.com/dialog/oauth?client_id=720825914723269&redirect_uri=" + currUrl + "&response_type=code"
     link.href = redirect_uri
     link.text = "AUTHORIZATION"
@@ -102,7 +101,7 @@
                     <div id="facebookresults"></div>
                 </div>
                 <div class="col-sm-5">
-                    <img src="img/twitter.jpg" width="32" height="32"/>
+                    <!--<img src="img/twitter.jpg" width="32" height="32"/> -->
                     <div id="twitterresults"></div>
                 </div>
             </div>

@@ -51,19 +51,22 @@ public class MainPageServlet extends HttpServlet {
 
             }
 
-            if (incomingParams.containsKey(IOTemplate.InputField.FACEBOOK_TOKEN)){
-                String token = incomingParams.get(IOTemplate.InputField.FACEBOOK_TOKEN);
+            if (incomingParams.containsKey(IOTemplate.InputField.FACEBOOK_CODE)){
+
+                String code = incomingParams.get(IOTemplate.InputField.FACEBOOK_CODE);
+
+                String token = FBInfo.verifyToken(code);
+
                 session.setAttribute("facebook_token", token);
                 session.setAttribute("valid_token", String.valueOf(FBInfo.checkToken(token)));
 
                 response.sendRedirect(request.getContextPath() + request.getServletPath());
-                System.out.println(request.getContextPath());
-                System.out.println(request.getPathInfo());
-                System.out.println(request.getServletPath());
                 return;
             }
 
-            session.setAttribute("valid_token", String.valueOf(FBInfo.checkToken((String) session.getAttribute("facebook_token"))));
+            String isValid = String.valueOf(FBInfo.checkToken((String) session.getAttribute("facebook_token")));
+            session.setAttribute("valid_token", isValid);
+
             if (incomingParams.containsKey(IOTemplate.InputField.ACTION)) {
 
                 if (incomingParams.get(IOTemplate.InputField.ACTION).equalsIgnoreCase("find")) {

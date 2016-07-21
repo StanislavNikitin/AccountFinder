@@ -9,13 +9,13 @@ public class IOTemplate {
     private static final int FIELDS_COUNT = 4;
 
     public enum InputField {
-        MAIL, LOGIN, ACTION, FACEBOOK_TOKEN;
+        MAIL, LOGIN, ACTION, FACEBOOK_CODE;
         public static InputField[] getInputFields(){
             InputField[] values = new InputField[FIELDS_COUNT];
             values[0] = MAIL;
             values[1] = LOGIN;
             values[2] = ACTION;
-            values[3] = FACEBOOK_TOKEN;
+            values[3] = FACEBOOK_CODE;
             return values;
         }
     }
