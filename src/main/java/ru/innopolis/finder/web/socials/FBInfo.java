@@ -12,14 +12,14 @@ import java.util.List;
  */
 public class FBInfo {
 
-    private static String accesToken = "EAACEdEose0cBAM6UNnmCXxZBX7ipGy3R06AEUiAbWk2ltOdAkaRQZCrluGmTS7cl2cLXUFa2EOT3ZCx7xfogHDA7LRa4oZCpMZC7tWHxsY2lj1V298GdlPFcKzlcFC7X8ukcFMQsaeWG9GePQxkhldW6qqAu6YKx87PdpbosZCmQZDZD";
     private static final String searchFields = "link,location,cover,name,id,hometown";
+    private String accesToken = null;
     private FacebookClient fbClient;
-
+    
 
     public static boolean checkToken(String accessToken){
         try {
-            FacebookClient fbClient = new DefaultFacebookClient(accesToken, Version.VERSION_2_6);
+            FacebookClient fbClient = new DefaultFacebookClient(accessToken, Version.VERSION_2_6);
             fbClient.fetchConnection("search", User.class,
                     Parameter.with("q", "Alexey"), Parameter.with("type", "user"),
                     Parameter.with("fields", searchFields));

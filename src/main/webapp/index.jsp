@@ -81,7 +81,17 @@
 
     </div>
 </div>
-<a href="https://www.facebook.com/dialog/oauth?client_id=720825914723269&redirect_uri=http://localhost:8080/Finder/index&response_type=code"> ATHORIZATION</a>
+<script type="application/javascript">
+    var link = document.createElement('a')
+    var currUrl = document.URL
+    if (currUrl.split('/')[-1] != "index") currUrl += "index"
+    var redirect_uri = "https://www.facebook.com/dialog/oauth?client_id=720825914723269&redirect_uri=" + currUrl + "&response_type=code"
+    link.href = redirect_uri
+    link.text = "AUTHORIZATION"
+    document.body.appendChild(link)
+    //<a href="https://www.facebook.com/dialog/oauth?client_id=720825914723269&redirect_uri="+document.URL+"&response_type=code"> ATHORIZATION</a>
+</script>
+
 
 <div id="resultPanel" class="panel panel-info">
     <div class="panel-body">

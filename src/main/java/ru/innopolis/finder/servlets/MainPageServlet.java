@@ -56,7 +56,10 @@ public class MainPageServlet extends HttpServlet {
                 session.setAttribute("facebook_token", token);
                 session.setAttribute("valid_token", String.valueOf(FBInfo.checkToken(token)));
 
-                response.sendRedirect(request.getContextPath() + "/index");
+                response.sendRedirect(request.getContextPath() + request.getServletPath());
+                System.out.println(request.getContextPath());
+                System.out.println(request.getPathInfo());
+                System.out.println(request.getServletPath());
                 return;
             }
 
